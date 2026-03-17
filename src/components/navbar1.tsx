@@ -39,6 +39,11 @@ interface MenuItem {
   items?: MenuItem[];
 }
 
+interface User {
+  role?: string;
+  [key: string]: unknown;
+}
+
 interface Navbar1Props {
   className?: string;
   logo?: {
@@ -76,7 +81,7 @@ const Navbar1 = ({
   className,
 }: Navbar1Props) => {
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const getCurrentUser = async () => {
@@ -132,6 +137,15 @@ const Navbar1 = ({
                     Login
                   </Button>
                 </Link>
+              )}
+              {user?.role === "TUTOR" ? (
+                <Link href="/create-tutor">
+                  <Button variant="outline" size="sm">
+                    Create Tutor Account
+                  </Button>
+                </Link>
+              ) : (
+                ""
               )}
             </div>
           </div>
