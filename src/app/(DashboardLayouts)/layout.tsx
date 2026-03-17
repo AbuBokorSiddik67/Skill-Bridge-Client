@@ -13,9 +13,13 @@ import {
 } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { getUser } from "@/services/auth";
+import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({ admin, student, tutor }: { admin: React.ReactNode, student: React.ReactNode, tutor: React.ReactNode }) {
   const user = await getUser();
+   if (!user) {
+     redirect("/login");
+   }
   let content;
  if (user?.role === "ADMIN") {
    content = admin;

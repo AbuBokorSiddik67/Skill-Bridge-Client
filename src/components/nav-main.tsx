@@ -18,7 +18,7 @@ export function NavMain({
     url: string;
     icon?: React.ReactNode;
   }[];
-}) {
+  }) {
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
@@ -34,9 +34,9 @@ export function NavMain({
           </SidebarMenuItem>
         </SidebarMenu>
         <SidebarMenu>
-          {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <Link href={item.url}>
+          {items.map((item, index) => (
+            <SidebarMenuItem key={index}>
+              <Link href={item.url || "#"}>
                 <SidebarMenuButton tooltip={item.title}>
                   {item.icon}
                   <span>{item.title}</span>

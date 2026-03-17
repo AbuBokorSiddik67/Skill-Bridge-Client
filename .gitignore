@@ -17,6 +17,9 @@
 /.next/
 /out/
 
+# history
+.history
+
 # production
 /build
 
@@ -35,9 +38,6 @@ yarn-error.log*
 
 # vercel
 .vercel
-
-# history
-.history
 
 # typescript
 *.tsbuildinfo
