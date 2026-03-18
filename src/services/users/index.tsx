@@ -1,26 +1,13 @@
-"use server"
+"use server";
 import { IUser } from "@/types";
-import { jwtDecode } from "jwt-decode";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
-
-export const getUser = async () => {
-  const storeCookie = await cookies();
-  const token = storeCookie.get("token")?.value;
-  let decodedData = null;
-  if (token) {
-    decodedData = await jwtDecode(token);
-    return decodedData;
-  } else {
-    return null;
-  }
-};
 
 export const updateMyProfile = async (id: string, values: IUser) => {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
-    console.log("valus data in index: ", values)
+    console.log("valus data in index: ", values);
 
     if (!token) {
       throw new Error("You are not authorized!");
@@ -61,19 +48,64 @@ export const updateMyProfile = async (id: string, values: IUser) => {
   }
 };
 
+export const getAllUsers = async () => {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("token")?.value;
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      next: { tags: ["all-users"] },
+    });
+
+    const contentType = res.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw new Error("Server returned non-JSON response");
+    }
+
+    const result = await res.json();
+
+    if (!res.ok) {
+      throw new Error(result.message || "Failed to fetch users");
+    }
+    return result;
+  } catch (err) {
+    return {
+      success: false,
+      message:
+        err instanceof Error ? err.message : "An unexpected error occurred",
+    };
+  }
+};
+
 export const getMe = async () => {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/me`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+    const res = await fetch(
+      `https://skillbridgeserver-gules.vercel.app/v1/api/auth/me`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        next: { tags: ["me"] },
       },
-      next: { tags: ["my-profile"] },
-    });
+    );
+     if (!res.ok) {
+       const errorHTML = await res.text();
+       console.log("Server Error HTML:", errorHTML);
+       throw new Error(`Server Error: ${res.status}`);
+     }
+    const contentType = res.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw new Error("Server returned non-JSON response");
+    }
 
     const result = await res.json();
 
@@ -83,7 +115,6 @@ export const getMe = async () => {
 
     return result;
   } catch (err) {
-    console.error("Fetch Error:", err);
     return {
       success: false,
       message:
@@ -92,33 +123,3 @@ export const getMe = async () => {
   }
 };
 
-export const getAllUsers = async () => {
-  try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value;
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      next: { tags: ["all-users"] },
-    });
-
-    const result = await res.json();
-
-    if (!res.ok) {
-      throw new Error(result.message || "Failed to fetch users");
-    }
-
-    return result;
-  } catch (err) {
-    console.error("Fetch Error:", err);
-    return {
-      success: false,
-      message:
-        err instanceof Error ? err.message : "An unexpected error occurred",
-    };
-  }
-};

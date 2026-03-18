@@ -18,3 +18,16 @@ export interface IUserResponse {
   message: string;
   data: IUser; 
 }
+
+export interface ITutorProfile {
+  userId: string;
+  aboutTutor: string;
+  sessionPrice?: number;   
+  experienceYears?: number; 
+  education?: string;     
+}
+export interface ITutorResponse {
+  success: boolean;
+  message?: string;
+  data: ITutorProfile;
+}
