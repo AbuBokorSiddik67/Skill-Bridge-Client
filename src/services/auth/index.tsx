@@ -50,10 +50,13 @@ export const loginUser = async (userData: FieldValues) => {
 export const getUser = async () => {
   const storeCookie = await cookies();
   const token = storeCookie.get("token")?.value;
+  let decodedData = null;
   if (token) {
-    return jwtDecode(token);
+    decodedData = await jwtDecode(token);
+    return decodedData;
+  } else {
+    return null;
   }
-  return null;
 };
 
 // Get Me (Fetching full data from Server)
@@ -149,6 +152,31 @@ export const deleteStudentProfile = async (id: string) => {
 
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/students/delete-profile/${id}`,
+      {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
+
+    const result = await res.json();
+    if (res.ok) {
+      revalidateTag("students", "max");
+      revalidateTag("deleted-students", "max")
+    }
+    return result;
+  } catch (err) {
+    return { success: false, message: "Deletion failed" };
+  }
+};
+
+// Delete permanent student profile
+ export const deleteUserProfile = async (id: string) => {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("token")?.value;
+
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/admin/delete-user/${id}`,
       {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },

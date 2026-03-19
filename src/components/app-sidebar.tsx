@@ -9,7 +9,7 @@ import {
   SidebarContent,
   SidebarFooter,
 } from "@/components/ui/sidebar";
-import { ListIcon, UsersIcon, Trash2Icon, Home } from "lucide-react";
+import { ListIcon, Trash2Icon, Home } from "lucide-react";
 import { getUser } from "@/services/auth";
 
 const data = {
@@ -25,18 +25,23 @@ const data = {
       icon: <ListIcon />,
     },
     {
+      title: "All Category",
+      url: "/dashboard/all-category",
+      icon: <ListIcon />,
+    },
+    {
       title: "All Bookings",
-      url: "/dashboard/bookings",
+      url: "/dashboard/all-bookings",
+      icon: <ListIcon />,
+    },
+    {
+      title: "Create Category",
+      url: "/dashboard/create-category",
       icon: <ListIcon />,
     },
     {
       title: "Inactive Users",
       url: "/dashboard/deleted-users",
-      icon: <UsersIcon />,
-    },
-    {
-      title: "Delete Users",
-      url: "/dashboard/delete",
       icon: <Trash2Icon />,
     },
     {
@@ -47,11 +52,6 @@ const data = {
   ],
 
   navStudent: [
-    {
-      title: "All Tutors",
-      url: "/dashboard/tutors",
-      icon: <ListIcon />,
-    },
     {
       title: "My Bookings",
       url: "/dashboard/bookings",

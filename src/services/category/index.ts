@@ -11,7 +11,6 @@ const getBaseUrl = () => {
 // 1. Create Category
 export const createCategory = async (data: {
   name: string;
-  description?: string;
 }) => {
   try {
     const cookieStore = await cookies();

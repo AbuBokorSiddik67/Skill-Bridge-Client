@@ -47,10 +47,10 @@ import {
   Lock,
 } from "lucide-react";
 import { IUser } from "@/types";
-import { deleteStudentProfile, updateStudentProfile } from "@/services/auth";
+import { deleteUserProfile, updateStudentProfile } from "@/services/auth";
 import { toast } from "sonner";
 
-export default function UserManagement({
+export default function DeletedUserManagement({
   initialUsers,
 }: {
   initialUsers: IUser[];
@@ -101,9 +101,9 @@ export default function UserManagement({
   const handleDelete = async () => {
     if (!selectedUser) return;
     setUsers(users.filter((u) => u.id !== selectedUser.id));
-    const res = await deleteStudentProfile(selectedUser.id);
+    const res = await deleteUserProfile(selectedUser.id);
     if (res.success) {
-      toast.success("User deleted successfully.");
+      toast.success("User permanently deleted successfully.");
       setIsDeleteDialogOpen(false);
     }
   };
@@ -113,7 +113,7 @@ export default function UserManagement({
       {/* Header */}
       <div className="flex flex-col gap-1">
         <h2 className="text-2xl font-semibold tracking-tight text-foreground">
-          User Control Center
+          Deleted User Control Center
         </h2>
         <p className="text-sm text-muted-foreground">
           Manage user profiles, roles, and security settings.

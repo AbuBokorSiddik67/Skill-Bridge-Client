@@ -93,6 +93,34 @@ export const getSingleTutor = async (id: string) => {
   }
 };
 
+export const getTutorAccount = async (id: string) => {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("token")?.value;
+    const baseUrl = getBaseUrl();
+
+    const res = await fetch(`${baseUrl}tutors/account/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      next: { tags: ["tutor-account"] },
+    });
+
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.message || "Failed to fetch tutor account");
+
+    return result;
+  } catch (err) {
+    return {
+      success: false,
+      message:
+        err instanceof Error ? err.message : "An unexpected error occurred",
+    };
+  }
+};
+
 export const updateTutorProfile = async (
   id: string,
   values: Partial<ITutorProfile>,
