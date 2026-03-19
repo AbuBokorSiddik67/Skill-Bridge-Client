@@ -120,6 +120,28 @@ export const updateStudentProfile = async (
 };
 
 // Delete Student Profile
+export const deletedStudentProfile = async () => {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("token")?.value;
+
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/admin/deleted-users`,
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+        next: { tags: ["deleted-students"] },
+      },
+    );
+
+    const result = await res.json();
+    return result;
+  } catch (err) {
+    return { success: false, message: "Deletion failed" };
+  }
+};
+
+// Delete Student Profile
 export const deleteStudentProfile = async (id: string) => {
   try {
     const cookieStore = await cookies();
@@ -134,7 +156,10 @@ export const deleteStudentProfile = async (id: string) => {
     );
 
     const result = await res.json();
-    if (res.ok) revalidateTag("students","max");
+    if (res.ok) {
+      revalidateTag("students", "max");
+      revalidateTag("deleted-students", "max")
+    }
     return result;
   } catch (err) {
     return { success: false, message: "Deletion failed" };

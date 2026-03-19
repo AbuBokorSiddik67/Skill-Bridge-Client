@@ -11,6 +11,7 @@ export interface IUser {
   emailVerified: boolean;
   createdAt: string;
   updatedAt: string;
+  isDeleted: boolean
 }
 
 export interface IUserResponse {

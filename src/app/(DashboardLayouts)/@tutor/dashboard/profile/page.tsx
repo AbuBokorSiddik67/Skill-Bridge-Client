@@ -4,7 +4,6 @@ import React from "react";
 
 export default async function MyProfile() {
   const myData = await getMe();
-  console.log("myData: ",myData)
   return (
     <div>
       <ProfilePage userData={myData} />

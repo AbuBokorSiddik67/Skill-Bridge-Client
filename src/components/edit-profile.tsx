@@ -33,7 +33,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { IUser, IUserResponse } from "@/types";
-import { updateMyProfile } from "@/services/users";
+import { updateStudentProfile } from "@/services/auth";
 
 interface EditProfileFormValues {
   name: string;
@@ -60,7 +60,8 @@ const EditAccount = ({ userData }: { userData: IUserResponse }) => {
 
   const onSubmit = async (values: EditProfileFormValues) => {
     try {
-      const res = await updateMyProfile(user.id, values as IUser);
+      const res = await updateStudentProfile(user.id, values as IUser);
+      console.log(user, values)
       if (res.success) {
         toast.success("Profile updated successfully!");
       } else {

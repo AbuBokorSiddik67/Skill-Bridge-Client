@@ -30,6 +30,8 @@ import { useEffect, useState } from "react";
 import { getUser, UserLogOut } from "@/services/auth";
 import Link from "next/link";
 import { toast } from "sonner";
+import { getSingleTutor } from "@/services/tutors";
+import { set } from "zod";
 
 interface MenuItem {
   title: string;
@@ -40,6 +42,7 @@ interface MenuItem {
 }
 
 interface User {
+  id?: string;
   role?: string;
   [key: string]: unknown;
 }
@@ -81,15 +84,28 @@ const Navbar1 = ({
   className,
 }: Navbar1Props) => {
   const [loading, setLoading] = useState(false);
+  const [tutorloading, setTutorLoading] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [tutor, setTutor] = useState<User | null>(null);
+  const isShowCreateTutor = user?.role === "TUTOR" && !tutor?.data;
 
   useEffect(() => {
     const getCurrentUser = async () => {
       const userData = await getUser();
-      setUser(userData);
+      setUser(userData as User | null);
     };
     getCurrentUser();
   }, [loading]);
+
+  useEffect(() => {
+    const getCurrentTutor = async () => {
+      setTutorLoading(true);
+      const TutorData = await getSingleTutor(user?.id as string);
+      setTutor(TutorData as User | null);
+      setTutorLoading(false);
+    };
+    getCurrentTutor();
+  }, [user?.id]);
 
   const handleLogOut = async () => {
     UserLogOut();
@@ -138,15 +154,13 @@ const Navbar1 = ({
                   </Button>
                 </Link>
               )}
-              {user?.role === "TUTOR" ? (
+              {tutorloading ? null : isShowCreateTutor ? (
                 <Link href="/create-tutor">
                   <Button variant="outline" size="sm">
                     Create Tutor Account
                   </Button>
                 </Link>
-              ) : (
-                ""
-              )}
+              ) : null}
             </div>
           </div>
         </nav>
@@ -194,6 +208,13 @@ const Navbar1 = ({
                       <span className="font-bold">Theme Toggle</span>
                       <ModeToggle />
                     </div>
+                    {tutorloading ? null : isShowCreateTutor ? (
+                      <Link href="/create-tutor">
+                        <Button variant="outline" size="sm">
+                          Create Tutor Account
+                        </Button>
+                      </Link>
+                    ) : null}
                     {user ? (
                       <Button
                         onClick={handleLogOut}

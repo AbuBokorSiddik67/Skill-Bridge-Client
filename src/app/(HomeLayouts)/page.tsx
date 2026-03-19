@@ -6,7 +6,7 @@ import { WhyChooseUs } from "@/components/logo-cloud";
 import { Navbar1 } from "@/components/navbar1";
 import { TutorCarousel } from "@/components/top-turors";
 
-export default function Home() {
+export default async function Home() {
   return (
     <div className="relative">
       {/* Navbar Container */}
