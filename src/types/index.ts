@@ -31,3 +31,23 @@ export interface ITutorResponse {
   message?: string;
   data: ITutorProfile;
 }
+
+export interface IBooking {
+  tutorId: string;
+  studentId: string;
+  categoryId: string;
+  startDate: string | Date; // ISO String format usually
+  endDate: string | Date;
+  totalPrice: number;
+  location: string;
+  notes?: string; // Optional because user might not provide notes
+  paymentMethod: "CASH" | "ONLINE" | "BKASH" | "NAGAD"; // Literal types for better safety
+  meetingLink?: string; // Optional if it's an offline tuition
+}
+
+export interface IReview {
+  tutorId: string;
+  studentId: string;
+  rating: number; 
+  comment: string;
+}
